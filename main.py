@@ -2,6 +2,7 @@ import requests
 import os
 from flask import Flask,jsonify
 import bs4
+from time import sleep
 
 app = Flask(__name__)
 
@@ -13,6 +14,7 @@ def GetPriceAndName(var):
     document= bs4.BeautifulSoup(Data2.text, 'html.parser')
     Lowest = document.find("span",class_="text-robux-lg wait-for-i18n-format-render")
     Name = document.title
+    sleep(.1)
   return Lowest.string,Name.string
 
 def GetResaleData(var):
@@ -21,6 +23,8 @@ def GetResaleData(var):
     GetData = requests.get('https://economy.roblox.com/v1/assets/'+var+'/resale-data')
     if GetData.status_code == 200:
       Data = GetData.json()
+    else:
+      sleep(.1)
   return Data
 
 @app.route('/LimitedData/<var>')
