@@ -5,25 +5,30 @@ import bs4
 
 app = Flask(__name__)
 
-@app.route('/LimitedData/<var>')
-def GetLimitedData(var):
-  Data = requests.get('https://economy.roblox.com/v1/assets/'+var+'/resale-data')
-  Data2 = requests.get('https://www.roblox.com/catalog/'+var)
-  if Data.status_code == 200:
+def GetPriceAndName(var):
+  Lowest = None
+  Name = None
+  while Lowest == None and Name == None:
+    Data2 = requests.get('https://www.roblox.com/catalog/'+var)
     document= bs4.BeautifulSoup(Data2.text, 'html.parser')
     Lowest = document.find("span",class_="text-robux-lg wait-for-i18n-format-render")
-    if Lowest != None:
-      Lowest = Lowest.string
-    else:
-      Lowest = ''
-      
-    Data = Data.json()
+    Name = document.title
+  return Lowest.string,Name.string
+
+def GetResaleData(var):
+  Data = None
+  while Data == None :
+    GetData = requests.get('https://economy.roblox.com/v1/assets/'+var+'/resale-data')
+    if GetData.status_code == 200:
+      Data = GetData.json()
+  return Data
+
+@app.route('/LimitedData/<var>')
+def GetLimitedData(var):
+    Data = GetResaleData(var)
     Data["success"] = True
-    Data['SellingPrice'] = Lowest
+    Data['BestPrice'],Data['Name'] = GetPriceAndName(var)
     return jsonify(Data)
-  else:
-    print(Data.json())
-    return jsonify({'success': False})
   
 @app.route("/")
 def Home():
