@@ -19,6 +19,8 @@ def GetLimitedData(var):
     Data["success"] = True
     return jsonify(Data)
   else:
+    print(Data.json())
+    print(ProductData.json())
     return jsonify({'success': False})
   
 @app.route("/")
