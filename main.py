@@ -3,7 +3,6 @@ import os
 from flask import Flask,jsonify
 import bs4
 
-
 app = Flask(__name__)
 
 @app.route('/LimitedData/<var>')
