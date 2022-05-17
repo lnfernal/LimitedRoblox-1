@@ -1,12 +1,24 @@
-from flask import Flask, jsonify
+import requests
 import os
+from flask import Flask,jsonify
+
 
 app = Flask(__name__)
+print(os.getenv("PORT"))
 
-
-@app.route('/')
-def index():
-    return jsonify({"Choo Choo": "Welcome to your Flask app 🚅"})
+@app.route('/LimitedData/<var>')
+def GetLimitedData(var):
+  Data = requests.get('https://economy.roblox.com/v1/assets/'+var+'/resale-data')
+  if Data.status_code == 200:
+    Data = Data.json()
+    Data["success"] = True
+    return jsonify(Data)
+  else:
+    return jsonify({'success': False})
+  
+@app.route("/")
+def Home():
+  return "Home"
 
 
 if __name__ == '__main__':
