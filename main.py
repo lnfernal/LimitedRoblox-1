@@ -14,7 +14,7 @@ def GetPriceAndName(var):
     document= bs4.BeautifulSoup(Data2.text, 'html.parser')
     Lowest = document.find("span",class_="text-robux-lg wait-for-i18n-format-render")
     Name = document.title
-    sleep(1)
+    sleep(2)
   return Lowest.string,Name.string
 
 def GetResaleData(var):
@@ -24,7 +24,7 @@ def GetResaleData(var):
     if GetData.status_code == 200:
       Data = GetData.json()
     else:
-      sleep(1)
+      sleep(2)
   return Data
 
 @app.route('/LimitedData/<var>')
