@@ -5,7 +5,6 @@ import bs4
 
 
 app = Flask(__name__)
-print(os.getenv("PORT"))
 
 @app.route('/LimitedData/<var>')
 def GetLimitedData(var):
