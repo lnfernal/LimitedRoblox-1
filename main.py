@@ -8,12 +8,11 @@ app = Flask(__name__)
 @app.route('/LimitedData/<var>')
 def GetLimitedData(var):
   Data = requests.get('https://economy.roblox.com/v1/assets/'+var+'/resale-data')
-  Data2 = requests.get('https://www.roblox.com/catalog/'+var)
+  Data2 = requests.get('https://economy.roblox.com/v1/assets/'+var+'/resellers')
   if Data.status_code == 200:
-    document= bs4.BeautifulSoup(Data2.text, 'html.parser')
-    Lowest = document.find("span",class_="text-robux-lg wait-for-i18n-format-render")
+    Lowest = Data2.json().get("data")
     if Lowest != None:
-      Lowest = Lowest.string
+      Lowest = Lowest[0]['price']
     else:
       Lowest = ''
       
